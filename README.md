@@ -1,56 +1,46 @@
-# 🌆 Aswin Samuel's Tech City – 3D Interactive Portfolio
+# Aswin Samuel's Tech City – 3D Interactive Portfolio
 
-Welcome to **Aswin Samuel's Futuristic Tech City** – a cutting-edge 3D portfolio built using **Three.js**, blending immersive visuals with interactive storytelling.
+**Aswin Samuel's Tech City** is a futuristic, interactive 3D portfolio built using Three.js. This project provides an immersive experience where visitors can explore a virtual city that showcases Aswin's journey in Artificial Intelligence, Machine Learning, and innovative technology development.
 
-🚀 **Explore a Virtual City** where each building unveils a key aspect of Aswin’s journey in **Artificial Intelligence**, **Machine Learning**, and **Tech Innovation**.
+## Features
 
----
+- Drive through the 3D city using keyboard controls (WASD + Space for turbo)
+- Explore different buildings that represent:
+  - About Me
+  - Project Highlights
+  - Innovation Lab
+  - Certifications and Achievements
+  - Contact Information
+- Toggle between day and night modes
+- Animated visuals with particle effects and lighting
+- Responsive and mobile-friendly design with basic swipe controls
 
-## 🏙️ Features
+## Technologies Used
 
-- 🚗 **Drive through the city** using WASD keys + SPACE for Turbo Boost
-- 🧠 **Visit buildings** to explore:
-  - About Me Tower
-  - Projects Plaza
-  - Innovation Garage
-  - Certifications Hub
-  - Contact Terminal
-- 🌗 **Day/Night Mode Toggle**
-- ⚡ **Particle Effects & Neon Animations**
-- 📱 **Mobile-friendly with swipe gestures**
+- [Three.js](https://threejs.org/) – 3D Graphics Rendering
+- HTML5, CSS3 – Layout and styling
+- JavaScript – Logic and interactivity
+- WebGL – Hardware-accelerated graphics
 
----
+## Live Demo
 
-## 🔧 Built With
+Explore the full interactive experience here:  
+**[https://aswinsamuel-codes.github.io/aswin-tech-city/](https://aswinsamuel-codes.github.io/aswin-tech-city/)**
 
-- [Three.js](https://threejs.org/) – 3D Graphics Engine
-- HTML5 + CSS3 – Responsive UI Design
-- JavaScript – Game Mechanics and Logic
-- WebGL – Rendering Engine for Immersive Visuals
-
-
-## 📡 Live Demo
-
-🔗 [Click here to explore the live site](https://aswinsamuel-codes.github.io/aswin-tech-city/)
-
----
-
-## 👨‍💻 Creator
+## About the Developer
 
 **Aswin Samuel**  
-AI/ML Intern | Tech Innovator | Passionate about ethical AI
+AI/ML Intern | Technology Enthusiast | Advocate for Ethical Innovation
 
-📬 Email: [aswinsamuelofficial@gmail.com](mailto:aswinsamuelofficial@gmail.com)  
-🔗 [LinkedIn](https://linkedin.com/in/aswinsamuel)  
-🐙 [GitHub](https://github.com/aswinsamuel-codes)
+- Email: [aswinsamuelofficial@gmail.com](mailto:aswinsamuelofficial@gmail.com)  
+- LinkedIn: [linkedin.com/in/aswinsamuel](https://linkedin.com/in/aswinsamuel)  
+- GitHub: [github.com/aswinsamuel-codes](https://github.com/aswinsamuel-codes)
 
-> *"Technology for a Better Tomorrow, Rooted in Ethics and Impact."*
+_"Technology for a Better Tomorrow, Rooted in Ethics and Impact."_
 
----
+## How to Run Locally
 
-## 🛠️ How to Run Locally
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/aswinsamuel-codes/aswin-tech-city.git
-   cd aswin-tech-city
+```bash
+git clone https://github.com/aswinsamuel-codes/aswin-tech-city.git
+cd aswin-tech-city
+open index.html
