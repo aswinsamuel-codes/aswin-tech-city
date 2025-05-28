@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aswin Samuel - Tech City Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            overflow: hidden;
+            color: #00ffff;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff6b6b;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+        }
+
+        #contentModal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+            backdrop-filter: blur(15px);
+            border: 3px solid #00ffff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 80vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 200;
+            display: none;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+        }
+
+        .neon-text {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+        }
+
+        .neon-button {
+            background: transparent;
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin: 5px;
+        }
+
+        .neon-button:hover {
+            background: #ff6b6b;
+            color: #000;
+            box-shadow: 0 0 20px #ff6b6b;
+        }
+
+        .building-info {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 4px solid #00ffff;
+            border-radius: 8px;
+        }
+
+        .project-card {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .cert-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #00ffff, #ff6b6b);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        #loadingScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+            color: #00ffff;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 255, 255, 0.3);
+            border-top: 5px solid #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .intro-text {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .speed-indicator {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            z-index: 100;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            #ui, #controls {
+                font-size: 12px;
+                padding: 10px;
+            }
+            
+            #contentModal {
+                max-width: 95vw;
+                max-height: 90vh;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div class="loader"></div>
+        <div class="intro-text">
+            <h1 class="neon-text">Welcome to Aswin Samuel's</h1>
+            <h2 class="neon-text">FUTURISTIC TECH CITY</h2>
+            <p style="margin-top: 20px; font-size: 18px;">AI/ML Intern | Technology for a Better Tomorrow | Rooted in Ethics and Impact</p>
+            <p style="margin-top: 10px;">Initializing Virtual Reality Experience...</p>
+        </div>
+    </div>
+
+    <div id="gameContainer">
+        <div id="ui">
+            <h2 class="neon-text">🚗 TECH CITY EXPLORER</h2>
+            <p><strong>Mission:</strong> Navigate through the city to discover Aswin's journey</p>
+            <p><strong>Current Location:</strong> <span id="currentLocation">City Center</span></p>
+            <button class="neon-button" onclick="toggleDayNight()">🌓 Day/Night</button>
+        </div>
+
+        <div id="controls">
+            <h3 class="neon-text">🎮 CONTROLS</h3>
+            <p><strong>W</strong> - Accelerate</p>
+            <p><strong>A/D</strong> - Steer</p>
+            <p><strong>S</strong> - Brake</p>
+            <p><strong>SPACE</strong> - Turbo Boost</p>
+        </div>
+
+        <div id="speedIndicator" class="speed-indicator">
+            <div class="neon-text">Speed: <span id="speedValue">0</span> km/h</div>
+        </div>
+    </div>
+
+    <div id="contentModal">
+        <button class="neon-button" onclick="closeModal()" style="float: right;">✕ Close</button>
+        <div id="modalContent"></div>
+    </div>
+
+    <script>
+        // Global variables
+        let scene, camera, renderer, car, city = [];
+        let keys = {};
+        let carSpeed = 0;
+        let maxSpeed = 0.5;
+        let turboMode = false;
+        let isDay = true;
+        let buildings = [];
+
+        // Portfolio content
+        const portfolioContent = {
+            'About Me Tower': `
+                <h2 class="neon-text">🏢 About Me Tower</h2>
+                <div class="building-info">
+                    <h3>Aswin Samuel</h3>
+                    <p><strong>AI/ML Intern</strong></p>
+                    <p><em>"Technology for a Better Tomorrow, Rooted in Ethics and Impact"</em></p>
+                    
+                    <h4>🎯 Mission</h4>
+                    <p>Passionate about leveraging artificial intelligence and machine learning to create meaningful solutions that benefit society while maintaining strong ethical principles.</p>
+                    
+                    <h4>🌟 Vision</h4>
+                    <p>To bridge the gap between cutting-edge technology and real-world applications, ensuring that innovation serves humanity's best interests.</p>
+                    
+                    <h4>🚀 Interests</h4>
+                    <ul>
+                        <li>Machine Learning & AI Ethics</li>
+                        <li>Computer Vision Applications</li>
+                        <li>Interactive Technology Systems</li>
+                        <li>Drone Technology & Automation</li>
+                    </ul>
+                </div>
+            `,
+            'Projects Plaza': `
+                <h2 class="neon-text">🏙️ Projects Plaza</h2>
+                <div class="building-info">
+                    <h3>Featured Projects</h3>
+                    
+                    <div class="project-card">
+                        <h4>🥁 Fingertip-Controlled Virtual Drum Kit</h4>
+                        <p>An innovative interface that transforms hand gestures into drum beats using computer vision and machine learning.</p>
+                        <p><strong>Tech:</strong> OpenCV, MediaPipe, Python</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4>🏃 Pose-Controlled Subway Surfers</h4>
+                        <p>Revolutionary gaming experience where body movements control game characters through pose detection.</p>
+                        <p><strong>Tech:</strong> Pose Estimation, Real-time Processing</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4>🤖 AI Chatbot for PDFs/Images</h4>
+                        <p>Intelligent document processing system that can understand and respond to queries about uploaded content.</p>
+                        <p><strong>Tech:</strong> NLP, Computer Vision, AI</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4>👤 Facial Attendance with Gesture Interface</h4>
+                        <p>Automated attendance system combining facial recognition with gesture-based controls for seamless operation.</p>
+                        <p><strong>Tech:</strong> Face Recognition, Gesture Detection</p>
+                    </div>
+                </div>
+            `,
+            'Innovation Garage': `
+                <h2 class="neon-text">🧠 Innovation Garage</h2>
+                <div class="building-info">
+                    <h3>🚁 Current Innovation: Drone Delivery System</h3>
+                    
+                    <div class="project-card">
+                        <h4>Advanced Autonomous Delivery Solution</h4>
+                        <p>A comprehensive drone delivery platform that revolutionizes last-mile logistics with intelligent automation and real-time monitoring.</p>
+                        
+                        <h5>🔧 Key Features:</h5>
+                        <ul>
+                            <li><strong>PC-Controlled Navigation:</strong> Sophisticated computer-based control system for precise flight management</li>
+                            <li><strong>Dynamic Speed & Height Control:</strong> Real-time adjustment capabilities for optimal delivery performance</li>
+                            <li><strong>Google Maps Integration:</strong> Seamless route planning and GPS navigation for accurate deliveries</li>
+                            <li><strong>Blynk IoT Monitoring:</strong> Real-time tracking, telemetry, and status updates through cloud-based dashboard</li>
+                        </ul>
+                        
+                        <h5>🌟 Impact:</h5>
+                        <p>This system addresses critical logistics challenges while maintaining safety standards and ethical considerations in autonomous technology deployment.</p>
+                        
+                        <h5>🔮 Future Enhancements:</h5>
+                        <ul>
+                            <li>AI-powered obstacle avoidance</li>
+                            <li>Weather adaptation algorithms</li>
+                            <li>Multi-drone coordination system</li>
+                            <li>Environmental impact optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            `,
+            'Certifications Hub': `
+                <h2 class="neon-text">🎓 Certifications Hub</h2>
+                <div class="building-info">
+                    <h3>Professional Certifications & Achievements</h3>
+                    
+                    <h4>🛡️ Security & Compliance</h4>
+                    <div class="cert-badge">Microsoft Security, Compliance, and Identity Fundamentals</div>
+                    
+                    <h4>📊 Data Analytics</h4>
+                    <div class="cert-badge">Power BI (OfficeMaster)</div>
+                    
+                    <h4>💻 Programming Excellence</h4>
+                    <div class="cert-badge">Python Essentials 2</div>
+                    <div class="cert-badge">C Essentials 1</div>
+                    <div class="cert-badge">C Essentials 2</div>
+                    <div class="cert-badge">Python Certification (Onwingspan)</div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4>🏆 Commitment to Excellence</h4>
+                        <p>These certifications represent a dedication to continuous learning and mastery of fundamental technologies that power modern AI/ML applications.</p>
+                        
+                        <h4>🎯 Learning Philosophy</h4>
+                        <p>Building strong foundations in core technologies while staying current with emerging trends in artificial intelligence and machine learning.</p>
+                    </div>
+                </div>
+            `,
+            'Contact Terminal': `
+                <h2 class="neon-text">📡 Contact Terminal</h2>
+                <div class="building-info">
+                    <h3>🌐 Connect with Aswin Samuel</h3>
+                    
+                    <div class="project-card">
+                        <h4>💼 Professional Network</h4>
+                        <p><strong>LinkedIn:</strong> <a href="https://linkedin.com/in/aswinsamuel" target="_blank" style="color: #00ffff;">linkedin.com/in/aswinsamuel</a></p>
+                        <p>Connect for professional opportunities, collaborations, and tech discussions.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4>💻 Code Repository</h4>
+                        <p><strong>GitHub:</strong> <a href="https://github.com/aswinsamuel-codes" target="_blank" style="color: #00ffff;">github.com/aswinsamuel-codes</a></p>
+                        <p>Explore open-source projects, contributions, and technical innovations.</p>
+                    </div>
+                    
+                    <div class="project-card">
+                        <h4>📧 Direct Communication</h4>
+                        <p><strong>Email:</strong> <a href="mailto:aswinsamuelofficial@gmail.com" style="color: #00ffff;">aswinsamuelofficial@gmail.com</a></p>
+                        <p>For collaboration opportunities, project inquiries, or tech discussions.</p>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <h4 class="neon-text">🚀 Let's Build the Future Together!</h4>
+                        <p><em>"Technology for a Better Tomorrow, Rooted in Ethics and Impact"</em></p>
+                    </div>
+                </div>
+            `
+        };
+
+        // Initialize the experience
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x0a0a0a, 50, 200);
+
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 10, 20);
+
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x0a0a0a);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('gameContainer').appendChild(renderer.domElement);
+
+            // Create city
+            createCity();
+            createCar();
+            createLighting();
+            
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 3000);
+
+            // Event listeners
+            setupEventListeners();
+            
+            // Start render loop
+            animate();
+        }
+
+        function createCity() {
+            // Ground
+            const groundGeometry = new THREE.PlaneGeometry(200, 200);
+            const groundMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x111111,
+                transparent: true,
+                opacity: 0.8
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Roads with neon glow
+            createRoads();
+            
+            // Buildings
+            const buildingData = [
+                { name: 'About Me Tower', pos: [-30, 0, -30], color: 0x00ffff, height: 25 },
+                { name: 'Projects Plaza', pos: [30, 0, -30], color: 0xff6b6b, height: 20 },
+                { name: 'Innovation Garage', pos: [-30, 0, 30], color: 0x9b59b6, height: 18 },
+                { name: 'Certifications Hub', pos: [30, 0, 30], color: 0xf39c12, height: 22 },
+                { name: 'Contact Terminal', pos: [0, 0, -60], color: 0x2ecc71, height: 15 }
+            ];
+
+            buildingData.forEach(data => {
+                createBuilding(data);
+            });
+
+            // Add decorative elements
+            createDecorations();
+        }
+
+        function createRoads() {
+            // Main roads
+            const roadMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x333333,
+                emissive: 0x001122,
+                emissiveIntensity: 0.1
+            });
+
+            // Horizontal road
+            const roadH = new THREE.Mesh(new THREE.PlaneGeometry(200, 8), roadMaterial);
+            roadH.rotation.x = -Math.PI / 2;
+            roadH.position.y = 0.01;
+            scene.add(roadH);
+
+            // Vertical road
+            const roadV = new THREE.Mesh(new THREE.PlaneGeometry(8, 200), roadMaterial);
+            roadV.rotation.x = -Math.PI / 2;
+            roadV.position.y = 0.01;
+            scene.add(roadV);
+
+            // Road lines (neon)
+            createRoadLines();
+        }
+
+        function createRoadLines() {
+            const lineMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00ffff,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.5
+            });
+
+            // Create dashed lines
+            for (let i = -90; i <= 90; i += 20) {
+                const line = new THREE.Mesh(new THREE.PlaneGeometry(10, 0.5), lineMaterial);
+                line.rotation.x = -Math.PI / 2;
+                line.position.set(i, 0.02, 0);
+                scene.add(line);
+
+                const lineV = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 10), lineMaterial);
+                lineV.rotation.x = -Math.PI / 2;
+                lineV.position.set(0, 0.02, i);
+                scene.add(lineV);
+            }
+        }
+
+        function createBuilding(data) {
+            const geometry = new THREE.BoxGeometry(8, data.height, 8);
+            const material = new THREE.MeshLambertMaterial({ 
+                color: data.color,
+                emissive: data.color,
+                emissiveIntensity: 0.2,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const building = new THREE.Mesh(geometry, material);
+            building.position.set(data.pos[0], data.height / 2, data.pos[2]);
+            building.castShadow = true;
+            building.userData = { name: data.name, type: 'building' };
+            scene.add(building);
+            buildings.push(building);
+
+            // Add building label
+            createBuildingLabel(data.name, data.pos, data.height);
+            
+            // Add glowing top
+            const topGeometry = new THREE.BoxGeometry(8.2, 0.5, 8.2);
+            const topMaterial = new THREE.MeshBasicMaterial({ 
+                color: data.color,
+                emissive: data.color,
+                emissiveIntensity: 0.8
+            });
+            const top = new THREE.Mesh(topGeometry, topMaterial);
+            top.position.set(data.pos[0], data.height + 0.25, data.pos[2]);
+            scene.add(top);
+        }
+
+        function createBuildingLabel(name, pos, height) {
+            // Create a simple text representation using planes
+            const labelGeometry = new THREE.PlaneGeometry(12, 2);
+            const labelMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.9
+            });
+            const label = new THREE.Mesh(labelGeometry, labelMaterial);
+            label.position.set(pos[0], height + 2, pos[2]);
+            label.userData = { isLabel: true };
+            scene.add(label);
+        }
+
+        function createCar() {
+            // Car body
+            const carGeometry = new THREE.BoxGeometry(2, 1, 4);
+            const carMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0xff6b6b,
+                emissive: 0xff6b6b,
+                emissiveIntensity: 0.1
+            });
+            car = new THREE.Mesh(carGeometry, carMaterial);
+            car.position.set(0, 0.5, 0);
+            car.castShadow = true;
+            scene.add(car);
+
+            // Car windows
+            const windowGeometry = new THREE.BoxGeometry(1.8, 0.8, 2);
+            const windowMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0x001133,
+                transparent: true,
+                opacity: 0.7
+            });
+            const windows = new THREE.Mesh(windowGeometry, windowMaterial);
+            windows.position.set(0, 1.2, 0);
+            car.add(windows);
+
+            // Headlights
+            createHeadlights();
+        }
+
+        function createHeadlights() {
+            const lightGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+            const lightMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xffffff,
+                emissive: 0xffffff,
+                emissiveIntensity: 1
+            });
+            
+            const leftLight = new THREE.Mesh(lightGeometry, lightMaterial);
+            leftLight.position.set(-0.6, 0.3, 2.1);
+            car.add(leftLight);
+            
+            const rightLight = new THREE.Mesh(lightGeometry, lightMaterial);
+            rightLight.position.set(0.6, 0.3, 2.1);
+            car.add(rightLight);
+        }
+
+        function createLighting() {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            scene.add(ambientLight);
+
+            // Directional light (sun/moon)
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(50, 50, 50);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            // Neon city lights
+            createNeonLights();
+        }
+
+        function createNeonLights() {
+            const colors = [0x00ffff, 0xff6b6b, 0x9b59b6, 0xf39c12, 0x2ecc71];
+            
+            for (let i = 0; i < 20; i++) {
+                const light = new THREE.PointLight(colors[i % colors.length], 0.5, 30);
+                light.position.set(
+                    (Math.random() - 0.5) * 150,
+                    Math.random() * 20 + 5,
+                    (Math.random() - 0.5) * 150
+                );
+                scene.add(light);
+            }
+        }
+
+        function createDecorations() {
+            // Floating particles
+            const particleGeometry = new THREE.SphereGeometry(0.1, 4, 4);
+            const particleMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00ffff,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.5
+            });
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                particle.position.set(
+                    (Math.random() - 0.5) * 200,
+                    Math.random() * 30 + 5,
+                    (Math.random() - 0.5) * 200
+                );
+                scene.add(particle);
+            }
+        }
+
+        function setupEventListeners() {
+            // Keyboard controls
+            document.addEventListener('keydown', (event) => {
+                keys[event.key.toLowerCase()] = true;
+                if (event.code === 'Space') {
+                    event.preventDefault();
+                    activateTurbo();
+                }
+            });
+
+            document.addEventListener('keyup', (event) => {
+                keys[event.key.toLowerCase()] = false;
+                if (event.code === 'Space') {
+                    turboMode = false;
+                }
+            });
+
+            // Window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Click detection for buildings
+            renderer.domElement.addEventListener('click', onMouseClick);
+        }
+
+        function onMouseClick(event) {
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(buildings);
+
+            if (intersects.length > 0) {
+                const building = intersects[0].object;
+                if (building.userData.name) {
+                    showBuildingContent(building.userData.name);
+                }
+            }
+        }
+
+        function showBuildingContent(buildingName) {
+            const modal = document.getElementById('contentModal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = portfolioContent[buildingName] || '<p>Content not found</p>';
+            modal.style.display = 'block';
+            
+            // Update current location
+            document.getElementById('currentLocation').textContent = buildingName;
+        }
+
+        function closeModal() {
+            document.getElementById('contentModal').style.display = 'none';
+        }
+
+        function updateCar() {
+            if (keys['w']) {
+                carSpeed = Math.min(carSpeed + 0.01, turboMode ? maxSpeed * 2 : maxSpeed);
+            }
+            if (keys['s']) {
+                carSpeed = Math.max(carSpeed - 0.02, -maxSpeed * 0.5);
+            }
+            if (!keys['w'] && !keys['s']) {
+                carSpeed *= 0.95; // Natural deceleration
+            }
+
+            if (keys['a']) {
+                car.rotation.y += 0.05 * (carSpeed / maxSpeed);
+            }
+            if (keys['d']) {
+                car.rotation.y -= 0.05 * (carSpeed / maxSpeed);
+            }
+
+            // Move car forward based on rotation
+            const direction = new THREE.Vector3(0, 0, carSpeed);
+            direction.applyQuaternion(car.quaternion);
+            car.position.add(direction);
+
+            // Keep car within bounds
+            car.position.x = Math.max(-90, Math.min(90, car.position.x));
+            car.position.z = Math.max(-90, Math.min(90, car.position.z));
+
+            // Update speed display
+            const speedKmh = Math.abs(carSpeed * 100).toFixed(0);
+            document.getElementById('speedValue').textContent = speedKmh;
+
+            // Camera follows car
+            updateCamera();
+        }
+
+        function updateCamera() {
+            const idealOffset = new THREE.Vector3(0, 8, -15);
+            idealOffset.applyQuaternion(car.quaternion);
+            const idealPosition = car.position.clone().add(idealOffset);
+            
+            camera.position.lerp(idealPosition, 0.1);
+            camera.lookAt(car.position);
+        }
+
+        function activateTurbo() {
+            turboMode = true;
+            
+            // Visual turbo effect
+            const turboParticles = [];
+            for (let i = 0; i < 20; i++) {
+                const particleGeometry = new THREE.SphereGeometry(0.2, 6, 6);
+                const particleMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xff6b6b,
+                    emissive: 0xff6b6b,
+                    emissiveIntensity: 1
+                });
+                const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                
+                // Position behind car
+                const offset = new THREE.Vector3(
+                    (Math.random() - 0.5) * 3,
+                    Math.random() * 2,
+                    -3 - Math.random() * 5
+                );
+                offset.applyQuaternion(car.quaternion);
+                particle.position.copy(car.position).add(offset);
+                
+                scene.add(particle);
+                turboParticles.push(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    scene.remove(particle);
+                }, 1000);
+            }
+        }
+
+        function toggleDayNight() {
+            isDay = !isDay;
+            
+            if (isDay) {
+                scene.fog.color.setHex(0x87ceeb);
+                renderer.setClearColor(0x87ceeb);
+                // Update lighting for day
+                scene.traverse((child) => {
+                    if (child.isDirectionalLight) {
+                        child.color.setHex(0xffffff);
+                        child.intensity = 1;
+                    }
+                });
+            } else {
+                scene.fog.color.setHex(0x0a0a0a);
+                renderer.setClearColor(0x0a0a0a);
+                // Update lighting for night
+                scene.traverse((child) => {
+                    if (child.isDirectionalLight) {
+                        child.color.setHex(0x404080);
+                        child.intensity = 0.3;
+                    }
+                });
+            }
+        }
+
+        function checkBuildingProximity() {
+            buildings.forEach(building => {
+                const distance = car.position.distanceTo(building.position);
+                if (distance < 15) {
+                    // Building is nearby - enhance glow effect
+                    building.material.emissiveIntensity = Math.max(0.2, 0.8 - distance / 15);
+                    
+                    // Update location indicator
+                    if (distance < 10) {
+                        document.getElementById('currentLocation').textContent = `Near ${building.userData.name}`;
+                    }
+                } else {
+                    building.material.emissiveIntensity = 0.2;
+                }
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            updateCar();
+            checkBuildingProximity();
+            
+            // Animate floating particles
+            scene.traverse((child) => {
+                if (child.geometry && child.geometry.type === 'SphereGeometry' && child.material.emissive) {
+                    child.rotation.x += 0.01;
+                    child.rotation.y += 0.01;
+                    child.position.y += Math.sin(Date.now() * 0.001 + child.position.x) * 0.01;
+                }
+            });
+            
+            // Pulsing neon effects
+            const time = Date.now() * 0.001;
+            buildings.forEach((building, index) => {
+                const pulse = Math.sin(time + index) * 0.1 + 0.3;
+                building.material.emissiveIntensity = Math.max(building.material.emissiveIntensity, pulse);
+            });
+            
+            renderer.render(scene, camera);
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', init);
+
+        // Prevent context menu on right click
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        // Mobile touch controls (basic)
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Simple swipe controls for mobile
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                if (deltaY < -50) {
+                    // Swipe up - accelerate
+                    keys['w'] = true;
+                    setTimeout(() => keys['w'] = false, 200);
+                } else if (deltaY > 50) {
+                    // Swipe down - brake
+                    keys['s'] = true;
+                    setTimeout(() => keys['s'] = false, 200);
+                }
+            } else {
+                if (deltaX < -50) {
+                    // Swipe left
+                    keys['a'] = true;
+                    setTimeout(() => keys['a'] = false, 200);
+                } else if (deltaX > 50) {
+                    // Swipe right
+                    keys['d'] = true;
+                    setTimeout(() => keys['d'] = false, 200);
+                }
+            }
+        });
+        
+        // Add mobile instructions
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            document.getElementById('controls').innerHTML += `
+                <div style="margin-top: 10px; border-top: 1px solid #ff6b6b; padding-top: 10px;">
+                    <h4 class="neon-text">📱 MOBILE</h4>
+                    <p>Swipe to navigate</p>
+                    <p>Tap buildings to explore</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
