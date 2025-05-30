@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aswin Samuel - Tech City Portfolio</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="loadingScreen">
+    <div class="loader"></div>
+    <div class="intro-text">
+      <h1 class="neon-text">Welcome to Aswin Samuel's</h1>
+      <h2 class="neon-text">FUTURISTIC TECH CITY</h2>
+      <p style="margin-top: 20px; font-size: 18px;">AI/ML Intern | Technology for a Better Tomorrow | Rooted in Ethics and Impact</p>
+      <p style="margin-top: 10px;">Initializing Virtual Reality Experience...</p>
+    </div>
+  </div>
+  <div id="gameContainer">
+    <div id="ui">
+      <h2 class="neon-text">TECH CITY EXPLORER</h2>
+      <p><strong>Mission:</strong> Navigate through the city to discover Aswin's journey</p>
+      <p><strong>Current Location:</strong> <span id="currentLocation">City Center</span></p>
+      <button class="neon-button" onclick="toggleDayNight()"> Day/Night</button>
+    </div>
+    <div id="controls">
+      <h3 class="neon-text">CONTROLS</h3>
+      <p><strong>W</strong> - Accelerate</p>
+      <p><strong>A/D</strong> - Steer</p>
+      <p><strong>S</strong> - Brake</p>
+      <p><strong>SPACE</strong> - Turbo Boost</p>
+    </div>
+    <div id="speedIndicator" class="speed-indicator">
+      <div class="neon-text">Speed: <span id="speedValue">0</span> km/h</div>
+    </div>
+  </div>
+  <div id="contentModal">
+    <button class="neon-button" onclick="closeModal()" style="float: right;">✕ Close</button>
+    <div id="modalContent"></div>
+  </div>
+  <script src="scripts/main.js"></script>
+</body>
+</html>
