@@ -1,6 +1,6 @@
 # Aswin Samuel's Tech City – 3D Interactive Portfolio
 
-**Aswin Samuel's Tech City** is a futuristic, interactive 3D portfolio built using Three.js. This project provides an immersive experience where visitors can explore a virtual city that showcases Aswin's journey in Artificial Intelligence, Machine Learning, and innovative technology development.
+**Aswin Samuel's Tech City** is a futuristic, interactive 3D portfolio built using Three.js. This project provides an immersive experience where visitors can explore a virtual city that showcases my journey in Artificial Intelligence, Machine Learning, and innovative technology development.
 
 ## Features
 
@@ -34,7 +34,7 @@ AI/ML Intern | Technology Enthusiast | Advocate for Ethical Innovation
 
 - Email: [aswinsamuelofficial@gmail.com](mailto:aswinsamuelofficial@gmail.com)  
 - LinkedIn: [linkedin.com/in/aswinsamuel](https://linkedin.com/in/aswinsamuel)  
-- GitHub: [github.com/aswinsamuel-codes](https://github.com/aswinsamuel-codes)
+- Instagram: [https://www.instagram.com/aswin_samuel__?igsh=MTJ1M291OHR2dDVwcw==](https://www.instagram.com/aswin_samuel__?igsh=MTJ1M291OHR2dDVwcw==)
 
 _"Technology for a Better Tomorrow, Rooted in Ethics and Impact."_
 
